@@ -1,0 +1,9 @@
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\bin\Debug\TestRFIDReader.exe.config
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\bin\Debug\TestRFIDReader.exe
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\bin\Debug\TestRFIDReader.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\obj\Debug\TestRFIDReader.csproj.AssemblyReference.cache
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\obj\Debug\TestRFIDReader.csproj.CoreCompileInputs.cache
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\obj\Debug\TestRFIDReader.exe
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\obj\Debug\TestRFIDReader.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\bin\Debug\UHFReader18CSharp.dll
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDReader\obj\Debug\TestRFIDReader.csproj.CopyComplete

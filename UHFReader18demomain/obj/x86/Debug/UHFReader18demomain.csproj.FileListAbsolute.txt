@@ -1,0 +1,15 @@
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\bin\x86\Debug\UHFReader18demomain.exe
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\bin\x86\Debug\UHFReader18demomain.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.csproj.AssemblyReference.cache
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.ChangeIPdlg.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.fNhSetDlg.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.Form1.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.fPhSetDlg.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.fSetdlg.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.locateForm.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.Properties.Resources.resources
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.csproj.GenerateResource.cache
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.csproj.CoreCompileInputs.cache
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.csproj.CopyComplete
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.exe
+C:\Distr\RFIDSDK\Demo\Csharp\UHFReader18demomain\obj\x86\Debug\UHFReader18demomain.pdb
