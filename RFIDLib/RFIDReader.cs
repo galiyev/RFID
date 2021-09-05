@@ -1,30 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Collections;
-using System.Resources;
-using System.Reflection;
-using ReaderB;
-using System.IO.Ports;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using ReaderB;
 
-namespace TestRFIDWinfForms
+namespace RFIDLib
 {
-    public partial class Form1 : Form
+    [Guid("3F0E241A-8575-44BF-B237-2B1913A1D102")]
+    public interface IRFIDReader
+    {
+        [DispId(1)]
+        bool Start(string mymessage);
+
+        [DispId(2)]
+        bool Stop();
+
+        [DispId(3)]
+        string GetValue(int timeOut);
+    }
+
+    public class RFIDReader:IRFIDReader
     {
         private static string IPAddr = "192.168.0.192";
         private static int port = 6002;
         private static string fComAdrStr = "FF";
         private string Edit_WordPtr;
-
-        #region Китайские переменные
+        
 
         private bool fAppClosed; //在测试模式下响应关闭应用程序
         private byte fComAdr = 0xff; //当前操作的ComAdr
@@ -55,16 +60,9 @@ namespace TestRFIDWinfForms
         public string fRecvUDPstring = "";
         public string RemostIP = "";
 
-        #endregion
+        private Timer _timer;
 
-
-
-        public Form1()
-        {
-            InitializeComponent();
-        }
-
-        private void btnOpenPort_Click(object sender, EventArgs e)
+        public bool Start(string mymessage)
         {
             var fComAdr = Convert.ToByte(fComAdrStr, 16); // $FF;
             var openresult = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
@@ -72,6 +70,10 @@ namespace TestRFIDWinfForms
             {
                 GetReaderInfo();
             }
+
+
+
+            return true;
         }
 
         private void GetReaderInfo()
@@ -189,184 +191,17 @@ namespace TestRFIDWinfForms
             //AddCmdLog("GetReaderInformation", "GetReaderInformation", fCmdRet);
         }
 
-        private void checkBox_pc_CheckedChanged(object sender, EventArgs e)
+        public bool Stop()
         {
-            //if (checkBox_pc.Checked)
-            //{
-            //    if (C_EPC)
-            //    {
-            //        Edit_WordPtr = "02";
-            //    }
-            //    int m, n;
-            //    n = 4;
-            //    if ((checkBox_pc.Checked) && (n % 4 == 0) && (C_EPC))
-            //    {
-            //        m = n / 4;
-            //        m = (m & 0x3F) << 3;
-            //        textBox_pc.Text = Convert.ToString(m, 16).PadLeft(2, '0') + "00";
-            //    }
-            //}
-            //else
-            //{
-            //    //Edit_WordPtr = false;
-            //}
-
+            throw new NotImplementedException();
         }
 
-        public bool C_EPC { get; set; } = true;
-
-        private void button2_Click(object sender, EventArgs e)
+        public string GetValue(int timeOut)
         {
-            if (CheckBox_TID.Checked)
-            {
-                if ((textBox4.Text.Length) != 2 || ((textBox5.Text.Length) != 2))
-                {
-                    MessageBox.Show("TID Parameter Error！");
-                    return;
-                }
-            }
-            Timer_Test_.Enabled = !Timer_Test_.Enabled;
-            //if (!Timer_Test_.Enabled)
-            //{
-            //    textBox4.Enabled = true;
-            //    textBox5.Enabled = true;
-            //    CheckBox_TID.Enabled = true;
-            //    if (ListView1_EPC.Items.Count != 0)
-            //    {
-            //        DestroyCode.Enabled = false;
-            //        AccessCode.Enabled = false;
-            //        NoProect.Enabled = false;
-            //        Proect.Enabled = false;
-            //        Always.Enabled = false;
-            //        AlwaysNot.Enabled = false;
-            //        NoProect2.Enabled = true;
-            //        Proect2.Enabled = true;
-            //        Always2.Enabled = true;
-            //        AlwaysNot2.Enabled = true;
-            //        P_Reserve.Enabled = true;
-            //        P_EPC.Enabled = true;
-            //        P_TID.Enabled = true;
-            //        P_User.Enabled = true;
-            //        Button_DestroyCard.Enabled = true;
-            //        Button_SetReadProtect_G2.Enabled = true;
-            //        Button_SetEASAlarm_G2.Enabled = true;
-            //        Alarm_G2.Enabled = true;
-            //        NoAlarm_G2.Enabled = true;
-            //        Button_LockUserBlock_G2.Enabled = true;
-            //        Button_WriteEPC_G2.Enabled = true;
-            //        Button_SetMultiReadProtect_G2.Enabled = true;
-            //        Button_RemoveReadProtect_G2.Enabled = true;
-            //        Button_CheckReadProtected_G2.Enabled = true;
-            //        button4.Enabled = true;
-            //        SpeedButton_Read_G2.Enabled = true;
-            //        Button_SetProtectState.Enabled = true;
-            //        Button_DataWrite.Enabled = true;
-            //        BlockWrite.Enabled = true;
-            //        Button_BlockErase.Enabled = true;
-            //        checkBox1.Enabled = true;
-            //    }
-            //    if (ListView1_EPC.Items.Count == 0)
-            //    {
-            //        DestroyCode.Enabled = false;
-            //        AccessCode.Enabled = false;
-            //        NoProect.Enabled = false;
-            //        Proect.Enabled = false;
-            //        Always.Enabled = false;
-            //        AlwaysNot.Enabled = false;
-            //        NoProect2.Enabled = false;
-            //        Proect2.Enabled = false;
-            //        Always2.Enabled = false;
-            //        AlwaysNot2.Enabled = false;
-            //        P_Reserve.Enabled = false;
-            //        P_EPC.Enabled = false;
-            //        P_TID.Enabled = false;
-            //        P_User.Enabled = false;
-            //        Button_DestroyCard.Enabled = false;
-            //        Button_SetReadProtect_G2.Enabled = false;
-            //        Button_SetEASAlarm_G2.Enabled = false;
-            //        Alarm_G2.Enabled = false;
-            //        NoAlarm_G2.Enabled = false;
-            //        Button_LockUserBlock_G2.Enabled = false;
-            //        SpeedButton_Read_G2.Enabled = false;
-            //        Button_DataWrite.Enabled = false;
-            //        BlockWrite.Enabled = false;
-            //        Button_BlockErase.Enabled = false;
-            //        Button_WriteEPC_G2.Enabled = true;
-            //        Button_SetMultiReadProtect_G2.Enabled = true;
-            //        Button_RemoveReadProtect_G2.Enabled = true;
-            //        Button_CheckReadProtected_G2.Enabled = true;
-            //        button4.Enabled = true;
-            //        Button_SetProtectState.Enabled = false;
-            //        checkBox1.Enabled = false;
-
-            //    }
-            //    AddCmdLog("Inventory", "Exit Query", 0);
-            //    button2.Text = "Query Tag";
-            //}
-            //else
-            //{
-            //    textBox4.Enabled = false;
-            //    textBox5.Enabled = false;
-            //    CheckBox_TID.Enabled = false;
-            //    DestroyCode.Enabled = false;
-            //    AccessCode.Enabled = false;
-            //    NoProect.Enabled = false;
-            //    Proect.Enabled = false;
-            //    Always.Enabled = false;
-            //    AlwaysNot.Enabled = false;
-            //    NoProect2.Enabled = false;
-            //    Proect2.Enabled = false;
-            //    Always2.Enabled = false;
-            //    AlwaysNot2.Enabled = false;
-            //    P_Reserve.Enabled = false;
-            //    P_EPC.Enabled = false;
-            //    P_TID.Enabled = false;
-            //    P_User.Enabled = false;
-            //    Button_WriteEPC_G2.Enabled = false;
-            //    Button_SetMultiReadProtect_G2.Enabled = false;
-            //    Button_RemoveReadProtect_G2.Enabled = false;
-            //    Button_CheckReadProtected_G2.Enabled = false;
-            //    button4.Enabled = false;
-
-            //    Button_DestroyCard.Enabled = false;
-            //    Button_SetReadProtect_G2.Enabled = false;
-            //    Button_SetEASAlarm_G2.Enabled = false;
-            //    Alarm_G2.Enabled = false;
-            //    NoAlarm_G2.Enabled = false;
-            //    Button_LockUserBlock_G2.Enabled = false;
-            //    SpeedButton_Read_G2.Enabled = false;
-            //    Button_DataWrite.Enabled = false;
-            //    BlockWrite.Enabled = false;
-            //    Button_BlockErase.Enabled = false;
-            //    Button_SetProtectState.Enabled = false;
-            //    ListView1_EPC.Items.Clear();
-            //    ComboBox_EPC1.Items.Clear();
-            //    ComboBox_EPC2.Items.Clear();
-            //    ComboBox_EPC3.Items.Clear();
-            //    ComboBox_EPC4.Items.Clear();
-            //    ComboBox_EPC5.Items.Clear();
-            //    ComboBox_EPC6.Items.Clear();
-            //    button2.Text = "Stop";
-            //    checkBox1.Enabled = false;
-            //}
+            throw new NotImplementedException();
         }
 
-        private void Timer_Test__Tick(object sender, EventArgs e)
-        {
-            if (fIsInventoryScan)
-                return;
-            Inventory();
-        }
-
-        private string ByteArrayToHexString(byte[] data)
-        {
-            StringBuilder sb = new StringBuilder(data.Length * 3);
-            foreach (byte b in data)
-                sb.Append(Convert.ToString(b, 16).PadLeft(2, '0'));
-            return sb.ToString().ToUpper();
-
-        }
-
+        private Dictionary<>
         private void Inventory()
         {
             int i;
@@ -382,10 +217,10 @@ namespace TestRFIDWinfForms
             byte AdrTID = 0;
             byte LenTID = 0;
             byte TIDFlag = 0;
-            if (CheckBox_TID.Checked)
+            if (true)
             {
-                AdrTID = Convert.ToByte(textBox4.Text, 16);
-                LenTID = Convert.ToByte(textBox5.Text, 16);
+                AdrTID = Convert.ToByte("02", 16);
+                LenTID = Convert.ToByte("04", 16);
                 TIDFlag = 1;
             }
             else
@@ -463,27 +298,25 @@ namespace TestRFIDWinfForms
             {
                 fCmdRet = StaticClassReaderB.CloseNetPort(frmcomportindex);
                 frmcomportindex = -1;
-                int port = Convert.ToInt32(Form1.port);
-                string IPAddr = Form1.IPAddr;
+                int port = Convert.ToInt32(RFIDReader.port);
+                string IPAddr = RFIDReader.IPAddr;
                 fCmdRet = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
                 fOpenComIndex = frmcomportindex;
             }
-            if (!CheckBox_TID.Checked)
-            {
-                //if ((ComboBox_EPC1.Items.Count != 0))
-                //{
-                //    ComboBox_EPC1.SelectedIndex = 0;
-                //    ComboBox_EPC2.SelectedIndex = 0;
-                //    ComboBox_EPC3.SelectedIndex = 0;
-                //    ComboBox_EPC4.SelectedIndex = 0;
-                //    ComboBox_EPC5.SelectedIndex = 0;
-                //    ComboBox_EPC6.SelectedIndex = 0;
-                //}
-            }
+           
             fIsInventoryScan = false;
-            if (fAppClosed)
-                Close();
+      
         }
+
+        private string ByteArrayToHexString(byte[] data)
+        {
+            StringBuilder sb = new StringBuilder(data.Length * 3);
+            foreach (byte b in data)
+                sb.Append(Convert.ToString(b, 16).PadLeft(2, '0'));
+            return sb.ToString().ToUpper();
+
+        }
+        public bool C_EPC { get; set; } = true;
 
         public void ChangeSubItem(ListViewItem ListItem, int subItemIndex, string ItemText)
         {

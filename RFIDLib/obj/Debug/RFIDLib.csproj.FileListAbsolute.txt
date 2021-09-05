@@ -1,0 +1,9 @@
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\bin\x86\Debug\RFIDLib.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\bin\x86\Debug\RFIDLib.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\bin\x86\Debug\System.Net.Http.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\obj\Debug\RFIDLib.csproj.CoreCompileInputs.cache
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\obj\Debug\RFIDLib.csproj.CopyComplete
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\obj\Debug\RFIDLib.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\obj\Debug\RFIDLib.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\obj\Debug\RFIDLib.csproj.AssemblyReference.cache
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDLib\bin\x86\Debug\UHFReader18CSharp.dll
