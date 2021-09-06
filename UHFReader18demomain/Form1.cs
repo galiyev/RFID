@@ -48,6 +48,9 @@ namespace UHFReader18demomain
         //以下TCPIP配置所需变量
         public string fRecvUDPstring="";
         public string RemostIP="";
+
+
+
         public Form1()
         {
             InitializeComponent();

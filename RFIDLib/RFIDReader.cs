@@ -10,6 +10,7 @@ using ReaderB;
 
 namespace RFIDLib
 {
+    [ComVisible(true)]
     [Guid("3F0E241A-8575-44BF-B237-2B1913A1D102")]
     public interface IRFIDReader
     {
@@ -21,16 +22,32 @@ namespace RFIDLib
 
         [DispId(3)]
         string GetValue(int timeOut);
+
+        [DispId(4)]
+        void RFIDAdded(string[] rfidTags);
+
+        [DispId(5)]
+        void Init();
+
+
     }
 
-    public class RFIDReader:IRFIDReader
+    [Guid("7ABFEDF7-7DCC-48EA-BBD1-847B83A46510"), InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    public interface IMyEvents
+    {
+    }
+
+    [ComVisible(true)]
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [Guid("c3919804-ff5f-4d2a-a773-5067a1e051e1")]
+    [ComSourceInterfaces(typeof(IMyEvents))]
+    public class RFIDReader: IRFIDReader
     {
         private static string IPAddr = "192.168.0.192";
         private static int port = 6002;
         private static string fComAdrStr = "FF";
         private string Edit_WordPtr;
         
-
         private bool fAppClosed; //在测试模式下响应关闭应用程序
         private byte fComAdr = 0xff; //当前操作的ComAdr
         private int ferrorcode;
@@ -40,8 +57,8 @@ namespace RFIDLib
         private byte Maskadr;
         private byte MaskLen;
         private byte MaskFlag;
-        private int fCmdRet = 30; //所有执行指令的返回值
-        private int fOpenComIndex; //打开的串口索引号
+        private int fCmdRet = 30; 
+        private int fOpenComIndex; 
         private bool fIsInventoryScan;
         private bool fisinventoryscan_6B;
         private byte[] fOperEPC = new byte[36];
@@ -50,18 +67,19 @@ namespace RFIDLib
         private int CardNum1 = 0;
         ArrayList list = new ArrayList();
         private bool fTimer_6B_ReadWrite;
-        private string fInventory_EPC_List; //存贮询查列表（如果读取的数据没有变化，则不进行刷新）
+        private string fInventory_EPC_List; 
         private int frmcomportindex;
         private bool ComOpen = false;
         private bool breakflag = false;
         private double x_z;
         private double y_f;
-        //以下TCPIP配置所需变量
         public string fRecvUDPstring = "";
         public string RemostIP = "";
+        private SynchronizationContext Sc;
+
 
         private Timer _timer;
-
+        
         public bool Start(string mymessage)
         {
             var fComAdr = Convert.ToByte(fComAdrStr, 16); // $FF;
@@ -70,11 +88,13 @@ namespace RFIDLib
             {
                 GetReaderInfo();
             }
-
-
-
             return true;
         }
+
+        [ComVisible(false)]
+
+        public delegate void OnRFIDReadingDelegate(string[] rfidTags);
+        public event OnRFIDReadingDelegate RFIDAdded;
 
         private void GetReaderInfo()
         {
@@ -191,6 +211,26 @@ namespace RFIDLib
             //AddCmdLog("GetReaderInformation", "GetReaderInformation", fCmdRet);
         }
 
+
+        public void TriggerReading(string[] rfidTags)
+        {
+            if (RFIDAdded != null)
+            {
+                RFIDAdded(rfidTags);
+            }
+        }
+
+
+        public void Init()
+        {
+            var fComAdr = Convert.ToByte(fComAdrStr, 16); // $FF;
+            var openresult = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
+            if (openresult == 0)
+            {
+                GetReaderInfo();
+            }
+        }
+
         public bool Stop()
         {
             throw new NotImplementedException();
@@ -198,10 +238,20 @@ namespace RFIDLib
 
         public string GetValue(int timeOut)
         {
+            return string.Empty;
+        }
+
+        private void RFIDReader_TagReading()
+        {
             throw new NotImplementedException();
         }
 
-        private Dictionary<>
+        public void RFIDRead()
+        {
+            throw new NotImplementedException();
+        }
+
+        private RFIDDic _dictionary = new RFIDDic();
         private void Inventory()
         {
             int i;
@@ -229,7 +279,7 @@ namespace RFIDLib
                 LenTID = 0;
                 TIDFlag = 0;
             }
-            ListViewItem aListItem = new ListViewItem();
+            RFIDTag aListItem = new RFIDTag();
             fCmdRet = StaticClassReaderB.Inventory_G2(ref fComAdr, AdrTID, LenTID, TIDFlag, EPC, ref Totallen, ref CardNum, frmcomportindex);
             if ((fCmdRet == 1) | (fCmdRet == 2) | (fCmdRet == 3) | (fCmdRet == 4) | (fCmdRet == 0xFB))//代表已查找结束，
             {
@@ -259,38 +309,15 @@ namespace RFIDLib
                     if (sEPC.Length != EPClen * 2)
                         return;
                     isonlistview = false;
-                    for (i = 0; i < ListView1_EPC.Items.Count; i++)     //判断是否在Listview列表内
-                    {
-                        if (sEPC == ListView1_EPC.Items[i].SubItems[1].Text)
-                        {
-                            aListItem = ListView1_EPC.Items[i];
-                            ChangeSubItem(aListItem, 1, sEPC);
-                            isonlistview = true;
-                        }
-                    }
-                    if (!isonlistview)
-                    {
-                        aListItem = ListView1_EPC.Items.Add((ListView1_EPC.Items.Count + 1).ToString());
-                        aListItem.SubItems.Add("");
-                        aListItem.SubItems.Add("");
-                        aListItem.SubItems.Add("");
-                        s = sEPC;
-                        ChangeSubItem(aListItem, 1, s);
-                        s = (sEPC.Length / 2).ToString().PadLeft(2, '0');
-                        ChangeSubItem(aListItem, 2, s);
-                        //if (!CheckBox_TID.Checked)
-                        //{
-                        //    if (ComboBox_EPC1.Items.IndexOf(sEPC) == -1)
-                        //    {
-                        //        ComboBox_EPC1.Items.Add(sEPC);
-                        //        ComboBox_EPC2.Items.Add(sEPC);
-                        //        ComboBox_EPC3.Items.Add(sEPC);
-                        //        ComboBox_EPC4.Items.Add(sEPC);
-                        //        ComboBox_EPC5.Items.Add(sEPC);
-                        //        ComboBox_EPC6.Items.Add(sEPC);
-                        //    }
-                        //}
 
+                    if (!_dictionary.ContainsKey(sEPC))
+                    {
+                        RFIDTag rfidTag = new RFIDTag(sEPC);
+                        _dictionary.Add(sEPC, rfidTag);
+                    }
+                    else
+                    {
+                        _dictionary[sEPC].ReadTime = DateTime.Now;
                     }
                 }
             }
@@ -318,44 +345,6 @@ namespace RFIDLib
         }
         public bool C_EPC { get; set; } = true;
 
-        public void ChangeSubItem(ListViewItem ListItem, int subItemIndex, string ItemText)
-        {
-            if (subItemIndex == 1)
-            {
-                if (ItemText == "")
-                {
-                    ListItem.SubItems[subItemIndex].Text = ItemText;
-                    if (ListItem.SubItems[subItemIndex + 2].Text == "")
-                    {
-                        ListItem.SubItems[subItemIndex + 2].Text = "1";
-                    }
-                    else
-                    {
-                        ListItem.SubItems[subItemIndex + 2].Text = Convert.ToString(Convert.ToInt32(ListItem.SubItems[subItemIndex + 2].Text) + 1);
-                    }
-                }
-                else
-                if (ListItem.SubItems[subItemIndex].Text != ItemText)
-                {
-                    ListItem.SubItems[subItemIndex].Text = ItemText;
-                    ListItem.SubItems[subItemIndex + 2].Text = "1";
-                }
-                else
-                {
-                    ListItem.SubItems[subItemIndex + 2].Text = Convert.ToString(Convert.ToInt32(ListItem.SubItems[subItemIndex + 2].Text) + 1);
-                    if ((Convert.ToUInt32(ListItem.SubItems[subItemIndex + 2].Text) > 9999))
-                        ListItem.SubItems[subItemIndex + 2].Text = "1";
-                }
-
-            }
-            if (subItemIndex == 2)
-            {
-                if (ListItem.SubItems[subItemIndex].Text != ItemText)
-                {
-                    ListItem.SubItems[subItemIndex].Text = ItemText;
-                }
-            }
-
-        }
+        
     }
 }
