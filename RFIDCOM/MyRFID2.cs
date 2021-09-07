@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace RFIDCOM
 {
     [ComVisible(true)]
-    [Guid("212D1429-D278-439F-8CCA-4968DA90132C")]
+    [Guid("212D2429-D278-139F-8CCA-4968DA90132C")]
     [ComSourceInterfaces(typeof(IMyRFIDReader))]
     [ClassInterface(ClassInterfaceType.AutoDual)]
     //[ProgId("RFIDCOM.MyRFID2")]

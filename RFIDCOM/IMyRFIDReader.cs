@@ -3,7 +3,7 @@
 namespace RFIDCOM
 {
     [ComVisible(true)]
-    [Guid("8F0E241A-8575-44BF-B237-2B1913ABD102")]
+    [Guid("8F0E243A-1575-44BF-B237-2B1913ABD102")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     internal interface IMyRFIDReader
     {
@@ -24,8 +24,8 @@ namespace RFIDCOM
         //Установка значений
         string Set(string IP, int port, int timeOut);
 
-        
-        [DispId(5)]
+
+        [DispId(0x60020004)]
         //4. описываем методы которые можно будет вызывать из вне
         void SendEvent();
     }
