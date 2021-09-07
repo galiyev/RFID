@@ -3,19 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace RFIDCOM
 {
     [ComVisible(true)]
-    [Guid("182D1429-D278-439F-8CCA-4968DA90124C"), ClassInterface(ClassInterfaceType.AutoDual), ComSourceInterfaces(typeof(IMyRFIDReader))]
+    [Guid("182D1429-D278-439F-8CCA-4968DA90124C"), ClassInterface(ClassInterfaceType.AutoDual),
+     ComSourceInterfaces(typeof(IMyRFIDReader))]
     [ProgId("RFIDCOM.MyRfidReader2")]
 
-    public class MyRfidReader2 
+    public class MyRfidReader2
     {
-        public delegate void ReadingDelegate();
-        public event ReadingDelegate TagReading;
+        [ComVisible(false)]
+
+        public delegate void EventDelegate();
+
+        [ComVisible(false)]
+
+        public delegate void EventWithParameterDelegate(object value);
+
+        [ComVisible(false)]
+
+        public delegate void EventWithParametersDelegate(String событие, object value, object исключение);
+
+        public System.IO.FileSystemWatcher РеальныйОбъект;
+
+        dynamic AutoWrap;
+
+        private SynchronizationContext Sc;
+
+        public event EventWithParametersDelegate EventError;
+
+        public Exception LastError;
+
+        public event EventWithParameterDelegate TagReaded;
+
+        private Object thisLock = new Object();
 
         private Timer _timer = new Timer()
         {
@@ -48,12 +74,37 @@ namespace RFIDCOM
 
         public void NewTagEvent()
         {
-            if (TagReading != null)
+            if (TagReaded != null)
             {
-                TagReading();
+                TagReaded(new object());
             }
         }
+
+        private void SendWithParam(EventWithParameterDelegate evntWithParam, object value)
+        {
+            Task.Run(() =>
+            {
+                if (evntWithParam != null)
+                {
+                    lock (this.thisLock)
+                    {
+                        try
+                        {
+                            Sc.Send(()=>evntWithParam(AutoWrap.ОбернутьОбъект(value)));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                    }
+                }
+            });
+        }
+        
     }
-
-
 }
+
+
+
+

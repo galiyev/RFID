@@ -4,6 +4,8 @@ namespace RFIDCOM
 {
     [ComVisible(true)]
     [Guid("6F0E241A-8575-44BF-B237-2B1913ABD102")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+
     internal interface IMyRFIDReader
     {
         [DispId(1)]
@@ -21,7 +23,7 @@ namespace RFIDCOM
 
         [DispId(4)]
         //4. описываем методы которые можно будет вызывать из вне
-        void TagReading();
+        void TagReaded();
     }
     
 }
