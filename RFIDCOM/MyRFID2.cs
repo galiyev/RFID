@@ -9,12 +9,13 @@ using System.Windows.Forms;
 namespace RFIDCOM
 {
     [ComVisible(true)]
-    [Guid("212D1429-D278-439F-8CCA-4968DA90124C"), ClassInterface(ClassInterfaceType.AutoDual),
+    [Guid("212D1429-D278-439F-8CCA-4968DA90122C"), ClassInterface(ClassInterfaceType.AutoDual),
      ComSourceInterfaces(typeof(IMyRFIDReader))]
     [ProgId("RFIDCOM.MyRFID2")]
     public class MyRFID2
     {
         public delegate void ReadingDelegate(string значения);
+        
         public event ReadingDelegate TagReaded;
 
         public void Start()
