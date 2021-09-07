@@ -82,24 +82,7 @@ namespace RFIDCOM
 
         private void SendWithParam(EventWithParameterDelegate evntWithParam, object value)
         {
-            Task.Run(() =>
-            {
-                if (evntWithParam != null)
-                {
-                    lock (this.thisLock)
-                    {
-                        try
-                        {
-                            Sc.Send(()=>evntWithParam(AutoWrap.ОбернутьОбъект(value)));
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            throw;
-                        }
-                    }
-                }
-            });
+           
         }
         
     }

@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyRfidReader.cs" />
+    <Compile Include="MyRFID2.cs" />
     <Compile Include="IMyEvents.cs" />
     <Compile Include="IMyRFIDReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
