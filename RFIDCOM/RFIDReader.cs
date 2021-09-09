@@ -1,27 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
 namespace RFIDCOM
 {
-    [ComVisible(true)]
-    [Guid("76BBC602-9CBD-40b4-A210-CBB844E7AA70")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
-    public interface IRFIDReader
-    {
-        [DispId(1)]
-        void TagReaded(string value);
-
-        [DispId(2)]
-        void Start();
-    }
-
     [ComVisible(true)]
     [Guid("581B3A54-55E0-4e07-8F37-5C20AAC47A25")]
     [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -45,6 +29,11 @@ namespace RFIDCOM
         public void Start()
         {
             MessageBox.Show("RFID ОК");
+        }
+
+        public void Set(string param)
+        {
+            MessageBox.Show($"Set 2 {param}");
         }
 
         public delegate void TestEvent01_Delegate(string value);

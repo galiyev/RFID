@@ -1,53 +1,35 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Collections;
+using System.Resources;
+using System.Reflection;
 using ReaderB;
+using System.IO.Ports;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using RFIDLib;
+using Timer = System.Threading.Timer;
 
-namespace RFIDLib
+namespace TestRFIDWinfForms
 {
-    [ComVisible(true)]
-    [Guid("3F0E241A-8575-44BF-B237-2B1913A1D102")]
-    public interface IRFIDReader
+    public class RFIDReadHelper
     {
-        [DispId(1)]
-        bool Start(string mymessage);
+        private RFIDDic _rfidDic = new RFIDDic();
 
-        [DispId(2)]
-        bool Stop();
-
-        [DispId(3)]
-        string GetValue(int timeOut);
-
-        [DispId(4)]
-        void RFIDAdded(string[] rfidTags);
-
-        [DispId(5)]
-        void Init();
-
-
-    }
-
-    [Guid("7ABFEDF7-7DCC-48EA-BBD1-847B83A46510"), InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
-    public interface IMyEvents
-    {
-    }
-
-    [ComVisible(true)]
-    [ClassInterface(ClassInterfaceType.AutoDual)]
-    [Guid("c3919804-ff5f-4d2a-a773-5067a1e051e1")]
-    [ComSourceInterfaces(typeof(IMyEvents))]
-    public class RFIDReader: IRFIDReader
-    {
         private static string IPAddr = "192.168.0.192";
         private static int port = 6002;
         private static string fComAdrStr = "FF";
         private string Edit_WordPtr;
-        
+
+        #region Китайские переменные
+
         private bool fAppClosed; //在测试模式下响应关闭应用程序
         private byte fComAdr = 0xff; //当前操作的ComAdr
         private int ferrorcode;
@@ -57,8 +39,8 @@ namespace RFIDLib
         private byte Maskadr;
         private byte MaskLen;
         private byte MaskFlag;
-        private int fCmdRet = 30; 
-        private int fOpenComIndex; 
+        private int fCmdRet = 30; //所有执行指令的返回值
+        private int fOpenComIndex; //打开的串口索引号
         private bool fIsInventoryScan;
         private bool fisinventoryscan_6B;
         private byte[] fOperEPC = new byte[36];
@@ -67,34 +49,136 @@ namespace RFIDLib
         private int CardNum1 = 0;
         ArrayList list = new ArrayList();
         private bool fTimer_6B_ReadWrite;
-        private string fInventory_EPC_List; 
+        private string fInventory_EPC_List; //存贮询查列表（如果读取的数据没有变化，则不进行刷新）
         private int frmcomportindex;
         private bool ComOpen = false;
         private bool breakflag = false;
         private double x_z;
         private double y_f;
+        //以下TCPIP配置所需变量
         public string fRecvUDPstring = "";
         public string RemostIP = "";
-        private SynchronizationContext Sc;
+
+        #endregion
+
+        private int _port;
+        private string _IPAddr;
 
 
-        private Timer _timer;
-        
-        public bool Start(string mymessage)
+        private Timer _inventoryTimer;
+
+        public RFIDDic RfidDic
         {
+            get => _rfidDic;
+            set => _rfidDic = value;
+        }
+
+        public void OpenPort(int port, string IPAddr)
+        {
+            _port = port;
+            _IPAddr = IPAddr;
+
             var fComAdr = Convert.ToByte(fComAdrStr, 16); // $FF;
-            var openresult = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
+            var openresult = StaticClassReaderB.OpenNetPort(_port, _IPAddr, ref fComAdr, ref frmcomportindex);
             if (openresult == 0)
             {
                 GetReaderInfo();
             }
-            return true;
         }
 
-        [ComVisible(false)]
+        private void Inventory()
+        {
+            int i;
+            int CardNum = 0;
+            int Totallen = 0;
+            int EPClen, m;
+            byte[] EPC = new byte[5000];
+            int CardIndex;
+            string temps;
+            string s, sEPC;
+            bool isonlistview;
+            fIsInventoryScan = true;
+            byte AdrTID = 0;
+            byte LenTID = 0;
+            byte TIDFlag = 0;
+            //if (CheckBox_TID.Checked)
+            if (true)
+            {
+                //AdrTID = Convert.ToByte(textBox4.Text, 16);
+                //LenTID = Convert.ToByte(textBox5.Text, 16);
+                AdrTID = Convert.ToByte("02", 16);
+                LenTID = Convert.ToByte("04", 16);
+                TIDFlag = 1;
+            }
+            else
+            {
+                AdrTID = 0;
+                LenTID = 0;
+                TIDFlag = 0;
+            }
+            ListViewItem aListItem = new ListViewItem();
+            fCmdRet = StaticClassReaderB.Inventory_G2(ref fComAdr, AdrTID, LenTID, TIDFlag, EPC, ref Totallen, ref CardNum, frmcomportindex);
+            if ((fCmdRet == 1) | (fCmdRet == 2) | (fCmdRet == 3) | (fCmdRet == 4) | (fCmdRet == 0xFB))//代表已查找结束，
+            {
+                byte[] daw = new byte[Totallen];
+                Array.Copy(EPC, daw, Totallen);
+                temps = ByteArrayToHexString(daw);
+                fInventory_EPC_List = temps;            //存贮记录
+                m = 0;
+                /*   while (ListView1_EPC.Items.Count < CardNum)
+                  {
+                      aListItem = ListView1_EPC.Items.Add((ListView1_EPC.Items.Count + 1).ToString());
+                      aListItem.SubItems.Add("");
+                      aListItem.SubItems.Add("");
+                      aListItem.SubItems.Add("");
+                 * 
+                  }*/
+                if (CardNum == 0)
+                {
+                    fIsInventoryScan = false;
+                    return;
+                }
+                for (CardIndex = 0; CardIndex < CardNum; CardIndex++)
+                {
+                    EPClen = daw[m];
+                    sEPC = temps.Substring(m * 2 + 2, EPClen * 2);
+                    m = m + EPClen + 1;
+                    if (sEPC.Length != EPClen * 2)
+                        return;
+                    isonlistview = false;
+                    foreach (var key in RfidDic.Keys)
+                    {
+                        if (sEPC == RfidDic[key].Tag)
+                        {
+                            isonlistview = true;
+                        }
+                    }
+                    if (!isonlistview)
+                    {
+                       RfidDic.Add(sEPC, new RFIDTag(sEPC));
+                    }
+                }
+            }
+            else if (((fCmdRet == 0x30) || (fCmdRet == 0x37) || (fCmdRet == 0x35)))
+            {
+                fCmdRet = StaticClassReaderB.CloseNetPort(frmcomportindex);
+                frmcomportindex = -1;
+                int port = Convert.ToInt32(_port);
+                string IPAddr = _IPAddr;
+                fCmdRet = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
+                fOpenComIndex = frmcomportindex;
+            }
+            fIsInventoryScan = false;
+        }
 
-        public delegate void OnRFIDReadingDelegate(string[] rfidTags);
-        public event OnRFIDReadingDelegate RFIDAdded;
+        private string ByteArrayToHexString(byte[] data)
+        {
+            StringBuilder sb = new StringBuilder(data.Length * 3);
+            foreach (byte b in data)
+                sb.Append(Convert.ToString(b, 16).PadLeft(2, '0'));
+            return sb.ToString().ToUpper();
+
+        }
 
         private void GetReaderInfo()
         {
@@ -211,140 +295,5 @@ namespace RFIDLib
             //AddCmdLog("GetReaderInformation", "GetReaderInformation", fCmdRet);
         }
 
-
-        public void TriggerReading(string[] rfidTags)
-        {
-            if (RFIDAdded != null)
-            {
-                RFIDAdded(rfidTags);
-            }
-        }
-
-
-        public void Init()
-        {
-            var fComAdr = Convert.ToByte(fComAdrStr, 16); // $FF;
-            var openresult = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
-            if (openresult == 0)
-            {
-                GetReaderInfo();
-            }
-        }
-
-        public bool Stop()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetValue(int timeOut)
-        {
-            return string.Empty;
-        }
-
-        private void RFIDReader_TagReading()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RFIDRead()
-        {
-            throw new NotImplementedException();
-        }
-
-        private RFIDDic _dictionary = new RFIDDic();
-        private void Inventory()
-        {
-            int i;
-            int CardNum = 0;
-            int Totallen = 0;
-            int EPClen, m;
-            byte[] EPC = new byte[5000];
-            int CardIndex;
-            string temps;
-            string s, sEPC;
-            bool isonlistview;
-            fIsInventoryScan = true;
-            byte AdrTID = 0;
-            byte LenTID = 0;
-            byte TIDFlag = 0;
-            if (true)
-            {
-                AdrTID = Convert.ToByte("02", 16);
-                LenTID = Convert.ToByte("04", 16);
-                TIDFlag = 1;
-            }
-            else
-            {
-                AdrTID = 0;
-                LenTID = 0;
-                TIDFlag = 0;
-            }
-            RFIDTag aListItem = new RFIDTag();
-            fCmdRet = StaticClassReaderB.Inventory_G2(ref fComAdr, AdrTID, LenTID, TIDFlag, EPC, ref Totallen, ref CardNum, frmcomportindex);
-            if ((fCmdRet == 1) | (fCmdRet == 2) | (fCmdRet == 3) | (fCmdRet == 4) | (fCmdRet == 0xFB))//代表已查找结束，
-            {
-                byte[] daw = new byte[Totallen];
-                Array.Copy(EPC, daw, Totallen);
-                temps = ByteArrayToHexString(daw);
-                fInventory_EPC_List = temps;            //存贮记录
-                m = 0;
-                /*   while (ListView1_EPC.Items.Count < CardNum)
-                  {
-                      aListItem = ListView1_EPC.Items.Add((ListView1_EPC.Items.Count + 1).ToString());
-                      aListItem.SubItems.Add("");
-                      aListItem.SubItems.Add("");
-                      aListItem.SubItems.Add("");
-                 * 
-                  }*/
-                if (CardNum == 0)
-                {
-                    fIsInventoryScan = false;
-                    return;
-                }
-                for (CardIndex = 0; CardIndex < CardNum; CardIndex++)
-                {
-                    EPClen = daw[m];
-                    sEPC = temps.Substring(m * 2 + 2, EPClen * 2);
-                    m = m + EPClen + 1;
-                    if (sEPC.Length != EPClen * 2)
-                        return;
-                    isonlistview = false;
-
-                    if (!_dictionary.ContainsKey(sEPC))
-                    {
-                        RFIDTag rfidTag = new RFIDTag(sEPC);
-                        _dictionary.Add(sEPC, rfidTag);
-                    }
-                    else
-                    {
-                        _dictionary[sEPC].ReadTime = DateTime.Now;
-                    }
-                }
-            }
-            else if (((fCmdRet == 0x30) || (fCmdRet == 0x37) || (fCmdRet == 0x35)))
-            {
-                fCmdRet = StaticClassReaderB.CloseNetPort(frmcomportindex);
-                frmcomportindex = -1;
-                int port = Convert.ToInt32(RFIDReader.port);
-                string IPAddr = RFIDReader.IPAddr;
-                fCmdRet = StaticClassReaderB.OpenNetPort(port, IPAddr, ref fComAdr, ref frmcomportindex);
-                fOpenComIndex = frmcomportindex;
-            }
-           
-            fIsInventoryScan = false;
-      
-        }
-
-        private string ByteArrayToHexString(byte[] data)
-        {
-            StringBuilder sb = new StringBuilder(data.Length * 3);
-            foreach (byte b in data)
-                sb.Append(Convert.ToString(b, 16).PadLeft(2, '0'));
-            return sb.ToString().ToUpper();
-
-        }
-        public bool C_EPC { get; set; } = true;
-
-        
     }
 }
