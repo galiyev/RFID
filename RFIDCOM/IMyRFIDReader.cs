@@ -22,7 +22,7 @@ namespace RFIDCOM
 
         [DispId(4)]
         //Установка значений
-        string Set(string IP, int port, int timeOut);
+        void Set(string parameter);
 
 
         [DispId(0x60020004)]

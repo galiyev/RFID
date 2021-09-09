@@ -1,7 +1,5 @@
 C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\bin\Debug\RFIDCOM.dll
-C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\bin\Debug\RFIDCOM.pdb
 C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\bin\Debug\RFIDCOM.tlb
 C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\obj\Debug\RFIDCOM.csproj.CoreCompileInputs.cache
 C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\obj\Debug\RFIDCOM.dll
 C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\obj\Debug\RFIDCOM.pdb
-C:\Distr\RFIDSDK\Demo\Csharp\RFIDCOM\obj\Debug\RFIDCOM.csproj.AssemblyReference.cache

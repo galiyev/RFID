@@ -30,9 +30,9 @@ namespace RFIDCOM
         }
 
      
-        public void Set(string IP, int port, int timeOut)
+        public void Set(string parameter)
         {
-            MessageBox.Show($"IP: {IP} port: {port} timeout:{timeOut}");
+            MessageBox.Show($"parameter: {parameter} ");
         }
         
         public void SendEvent()
