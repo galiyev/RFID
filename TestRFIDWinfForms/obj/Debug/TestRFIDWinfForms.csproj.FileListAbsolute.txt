@@ -16,3 +16,5 @@ C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDWinfForms\bin\x86\Debug\TestRFIDWinfForms.e
 C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDWinfForms\bin\x86\Debug\TestRFIDWinfForms.pdb
 C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDWinfForms\bin\x86\Debug\System.Net.Http.dll
 C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDWinfForms\bin\x86\Debug\UHFReader18CSharp.dll
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDWinfForms\bin\x86\Debug\RFIDLib.dll
+C:\Distr\RFIDSDK\Demo\Csharp\TestRFIDWinfForms\bin\x86\Debug\RFIDLib.pdb

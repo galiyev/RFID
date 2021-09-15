@@ -1,0 +1,14 @@
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\bin\Debug\REFIDHopeLandTest.exe.config
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\bin\Debug\REFIDHopeLandTest.exe
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\bin\Debug\REFIDHopeLandTest.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\bin\Debug\RFIDHopeLand.dll
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\bin\Debug\RFIDReaderAPI.dll
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\bin\Debug\RFIDHopeLand.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.csproj.AssemblyReference.cache
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.Form1.resources
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.Properties.Resources.resources
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.csproj.GenerateResource.cache
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.csproj.CoreCompileInputs.cache
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.csproj.CopyComplete
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.exe
+C:\Distr\RFIDSDK\Demo\Csharp\REFIDHopeLandTest\obj\Debug\REFIDHopeLandTest.pdb

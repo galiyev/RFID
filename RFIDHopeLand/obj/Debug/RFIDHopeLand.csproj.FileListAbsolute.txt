@@ -1,0 +1,10 @@
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\bin\Debug\RFIDHopeLand.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\bin\Debug\RFIDHopeLand.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\bin\Debug\RFIDLib.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\bin\Debug\RFIDReaderAPI.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\bin\Debug\RFIDLib.pdb
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\obj\Debug\RFIDHopeLand.csproj.AssemblyReference.cache
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\obj\Debug\RFIDHopeLand.csproj.CoreCompileInputs.cache
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\obj\Debug\RFIDHopeLand.csproj.CopyComplete
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\obj\Debug\RFIDHopeLand.dll
+C:\Distr\RFIDSDK\Demo\Csharp\RFIDHopeLand\obj\Debug\RFIDHopeLand.pdb
